@@ -15,7 +15,7 @@ def make_mimic(data: pd.DataFrame):
     loop_start = (data['repeat'] == 'below').idxmax()
     loop_end = (data['repeat'] == 'above').idxmax()
 
-    repeats = 20
+    repeats = 2
     if loop_start > 0 and loop_end > 0:
         data = pd.concat(
             [data.loc[:loop_start-1]]
@@ -110,18 +110,17 @@ def main():
         data['t'] = pd.to_datetime(data['t']).diff().shift(-1)
 
 
-    match args.requested_method:
-        case 'mimic':
-            data = make_mimic(data)
-        case 'points':
-            data = make_justpoints(data)
-        case 'lines':
-            data = make_splines(data)
-        case 'splines':
-            data = make_splines(data, 'cubic')
-        case interpolation_method:
-            print(f'{interpolation_method = }')
-            data = make_splines(data, interpolation_method)
+    if args.requested_method == 'mimic':
+        data = make_mimic(data)
+    elif args.requested_method == 'points':
+        data = make_justpoints(data)
+    elif args.requested_method == 'lines':
+        data = make_splines(data)
+    elif args.requested_method == 'splines':
+        data = make_splines(data, 'cubic')
+    else:
+        print(f'interpolation_method = {args.requested_method}')
+        data = make_splines(data, args.requested_method)
 
     time.sleep(2)
 

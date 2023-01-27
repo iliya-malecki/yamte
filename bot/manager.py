@@ -32,7 +32,9 @@ for kind, file_index in product(
     ['points','linear','quadratic','cubic','mimic'],
     files
 ):
-    os.system(f'echo "python ./controller.py {kind} --file_index {file_index}"')
+    command = f'python ./controller.py {kind} --file_index {file_index}'
+    print(f'{command = }')
+    os.system(command)
     if not recursive_conversation(kind, file_index):
         break
     time.sleep(1)
