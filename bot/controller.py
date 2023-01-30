@@ -6,16 +6,18 @@ import pandas as pd
 import time
 import numpy as np
 from scipy.interpolate import interp1d
-import matplotlib.pyplot as plt
 import argparse
 from pathlib import Path
 #%%
 def make_mimic(data: pd.DataFrame):
     data = data.copy()
+    if 'repeat' not in data:
+        return data
+
     loop_start = (data['repeat'] == 'below').idxmax()
     loop_end = (data['repeat'] == 'above').idxmax()
 
-    repeats = 2
+    repeats = 20
     if loop_start > 0 and loop_end > 0:
         data = pd.concat(
             [data.loc[:loop_start-1]]
